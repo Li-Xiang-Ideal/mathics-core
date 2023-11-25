@@ -24,6 +24,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install OS dependencies
       run: |
+        brew info llvm@13
+        brew info llvm@14
+        brew info llvm@15
+        brew info llvm@16
+        brew info llvm@17
         brew install llvm@14 tesseract
         python -m pip install --upgrade pip
     - name: Install Mathics3 with full Python dependencies
