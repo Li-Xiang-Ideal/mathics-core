@@ -155,10 +155,10 @@ def check_SparseArrayQ(expr, pattern, test, evaluation: Evaluation):
     if array_size.value > len(rules.elements):  # expr is not full
         test_expr = Expression(test, default_value)  # test default value
         if test_expr.evaluate(evaluation) != SymbolTrue:
-            return False
+            return SymbolFalse
     for rule in rules.elements:
         test_expr = Expression(test, rule.elements[-1])
         if test_expr.evaluate(evaluation) != SymbolTrue:
-            return False
+            return SymbolFalse
 
     return SymbolTrue

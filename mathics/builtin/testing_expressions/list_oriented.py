@@ -43,9 +43,9 @@ class ArrayQ(Builtin):
      = True
     >> ArrayQ[SparseArray[{{1, 2} -> a, {2, 1} -> b}], 1]
      = False
-    >> ArrayQ[SparseArray[{{1, 2} -> a, {2, 1} -> b}], 2, NumericQ]
-     = False
     >> ArrayQ[SparseArray[{{1, 2} -> a, {2, 1} -> b}], 2, SymbolQ]
+     = False
+    >> ArrayQ[SparseArray[{{1, 1} -> a, {1, 2} -> b}], 2, SymbolQ]
      = True
     """
 
