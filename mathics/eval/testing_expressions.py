@@ -136,7 +136,7 @@ def check_ArrayQ(expr, pattern, test, evaluation: Evaluation):
     depth = len(dims) - 1  # None doesn't count
     if not pattern.does_match(Integer(depth), evaluation):
         return SymbolFalse
-    
+
     return SymbolTrue
 
 
@@ -160,5 +160,5 @@ def check_SparseArrayQ(expr, pattern, test, evaluation: Evaluation):
         test_expr = Expression(test, rule.elements[-1])
         if test_expr.evaluate(evaluation) != SymbolTrue:
             return False
-        
+
     return SymbolTrue

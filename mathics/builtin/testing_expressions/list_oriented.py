@@ -61,7 +61,7 @@ class ArrayQ(Builtin):
 
         if expr.head.sameQ(SymbolSparseArray):
             return check_SparseArrayQ(expr, pattern, test, evaluation)
-        
+
         return check_ArrayQ(expr, pattern, test, evaluation)
 
 
