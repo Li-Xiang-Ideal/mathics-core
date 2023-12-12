@@ -206,7 +206,11 @@ def eval_Inner(f, list1, list2, g, evaluation: Evaluation):
 
 def eval_Outer(f, lists, evaluation: Evaluation):
     "Evaluates recursively the outer product of lists"
-
+    
+    if isinstance(lists, Atom):
+        evaluation.message("Outer", "normal")
+        return
+    
     # If f=!=Times, or lists contain both SparseArray and List, then convert all SparseArrays to Lists
     lists = lists.get_sequence()
     head = None

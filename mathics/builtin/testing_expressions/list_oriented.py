@@ -7,11 +7,10 @@ from mathics.core.builtin import Builtin, Test
 from mathics.core.evaluation import Evaluation
 from mathics.core.exceptions import InvalidLevelspecError
 from mathics.core.expression import Expression
-from mathics.core.rules import Pattern
 from mathics.core.symbols import Atom, SymbolFalse, SymbolTrue
-from mathics.core.systemsymbols import SymbolSubsetQ
+from mathics.core.systemsymbols import SymbolSparseArray, SymbolSubsetQ
 from mathics.eval.parts import python_levelspec
-from mathics.eval.testing_expressions import check_ArrayQ
+from mathics.eval.testing_expressions import check_ArrayQ, check_SparseArrayQ
 
 
 class ArrayQ(Builtin):
@@ -40,6 +39,14 @@ class ArrayQ(Builtin):
      = False
     >> ArrayQ[{{a, b}, {c, d}}, 2, SymbolQ]
      = True
+    >> ArrayQ[SparseArray[{{1, 2} -> a, {2, 1} -> b}]]
+     = True
+    >> ArrayQ[SparseArray[{{1, 2} -> a, {2, 1} -> b}], 1]
+     = False
+    >> ArrayQ[SparseArray[{{1, 2} -> a, {2, 1} -> b}], 2, NumericQ]
+     = False
+    >> ArrayQ[SparseArray[{{1, 2} -> a, {2, 1} -> b}], 2, SymbolQ]
+     = True
     """
 
     rules = {
@@ -52,17 +59,10 @@ class ArrayQ(Builtin):
     def eval(self, expr, pattern, test, evaluation: Evaluation):
         "ArrayQ[expr_, pattern_, test_]"
 
-        pattern = Pattern.create(pattern)
-
-        dims = [len(expr.get_elements())]  # to ensure an atom is not an array
-
-        if not check_ArrayQ(0, expr, dims, test, evaluation):
-            return SymbolFalse
-
-        depth = len(dims) - 1  # None doesn't count
-        if not pattern.does_match(Integer(depth), evaluation):
-            return SymbolFalse
-        return SymbolTrue
+        if expr.head.sameQ(SymbolSparseArray):
+            return check_SparseArrayQ(expr, pattern, test, evaluation)
+        
+        return check_ArrayQ(expr, pattern, test, evaluation)
 
 
 class DisjointQ(Test):

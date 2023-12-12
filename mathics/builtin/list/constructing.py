@@ -127,7 +127,7 @@ class ConstantArray(Builtin):
 
     summary_text = "form a constant array"
     rules = {
-        "ConstantArray[c_, dims_]": "Apply[Table[c, ##]&, List /@ dims]",
+        "ConstantArray[c_, dims_]": "Apply[Table[c, ##]&, List /@ Normal[dims]]",
         "ConstantArray[c_, n_Integer]": "ConstantArray[c, {n}]",
     }
 
