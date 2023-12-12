@@ -39,7 +39,7 @@ class ArrayQ(Builtin):
      = False
     >> ArrayQ[{{a, b}, {c, d}}, 2, SymbolQ]
      = True
-     
+
     ArrayQ works on sparse arrays:
     >> ArrayQ[SparseArray[{{1, 2} -> a, {2, 1} -> b}]]
      = True
