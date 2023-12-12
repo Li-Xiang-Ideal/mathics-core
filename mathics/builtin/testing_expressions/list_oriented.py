@@ -59,7 +59,7 @@ class ArrayQ(Builtin):
     def eval(self, expr, pattern, test, evaluation: Evaluation):
         "ArrayQ[expr_, pattern_, test_]"
 
-        if expr.head.sameQ(SymbolSparseArray):
+        if not isinstance(expr, Atom) and expr.head.sameQ(SymbolSparseArray):
             return check_SparseArrayQ(expr, pattern, test, evaluation)
 
         return check_ArrayQ(expr, pattern, test, evaluation)
