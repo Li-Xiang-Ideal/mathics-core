@@ -39,6 +39,14 @@ class ArrayQ(Builtin):
      = False
     >> ArrayQ[{{a, b}, {c, d}}, 2, SymbolQ]
      = True
+
+    ArrayQ works on sparse arrays:
+    >> ArrayQ[SparseArray[{{1, 2} -> a, {2, 1} -> b}]]
+     = True
+
+    For sparse arrays, ArrayQ tests not only specified values, but also default value 0:
+    >> ArrayQ[SparseArray[{{1, 2} -> a, {2, 1} -> b}], 2, SymbolQ]
+     = False
     """
 
     rules = {
