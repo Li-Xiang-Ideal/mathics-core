@@ -108,7 +108,9 @@ class ConstructOuterTest(unittest.TestCase):
         list5 = ListExpression(Integer(4), Integer(5))
         list6 = ListExpression(Integer(6), Integer(7), Integer(8))
 
-        expected_result_3 = Expression(Symbol("System`Tuples"), ListExpression(list4, list5, list6)).evaluate(evaluation)
+        expected_result_3 = Expression(
+            Symbol("System`Tuples"), ListExpression(list4, list5, list6)
+        ).evaluate(evaluation)
 
         def cond_next_list(item, level) -> bool:
             return isinstance(item, Atom) or not item.head.sameQ(SymbolList)
@@ -123,7 +125,10 @@ class ConstructOuterTest(unittest.TestCase):
             evaluation,
         )
 
-        assert ListExpression(*construct_outer([list4, list5, list6], (), etc_4)) == expected_result_3
+        assert (
+            ListExpression(*construct_outer([list4, list5, list6], (), etc_4))
+            == expected_result_3
+        )
 
 
 if __name__ == "__main__":
