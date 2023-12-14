@@ -64,6 +64,7 @@ class ConstructOuterTest(unittest.TestCase):
             evaluation,
         )
 
+        # Here initial current is empty, but in some cases we expect non-empty ones like ((), Integer1)
         assert construct_outer([list1, list2, list3], [], etc_1) == expected_result_1
         assert construct_outer([list1, list2, list3], (), etc_2) == expected_result_1
 
