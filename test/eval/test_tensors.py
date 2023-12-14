@@ -94,9 +94,9 @@ class UnpackOuterTest(unittest.TestCase):
             (lambda item, level: level > 1),
             (lambda item: item),
             tuple,  # use tuple instead of list
-            (lambda current: (list(current),)),  # use list instead of tuple
+            list,  # use list instead of tuple
             (lambda current, item: current + [item + 1]),  # add 1 to each element
-            False,
+            True,
             evaluation,
         )
 
@@ -119,14 +119,12 @@ class UnpackOuterTest(unittest.TestCase):
             cond_next_list,
             (lambda item: item.elements),
             (lambda elements: elements),  # apply_head
-            (lambda current: (ListExpression(*current),)),  # apply_f
+            (lambda current: ListExpression(*current)),  # apply_f
             (lambda current, item: current + (item,)),
             True,
             evaluation,
         )
 
-        print(unpack_outer(list4, [list5, list6], (), 1, etc_4))
-        print(expected_result_3)
         assert (
             ListExpression(*unpack_outer(list4, [list5, list6], (), 1, etc_4))
             == expected_result_3
