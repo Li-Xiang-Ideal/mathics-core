@@ -252,7 +252,7 @@ class ConstructOuterTest(unittest.TestCase):
             else:  # {i, {1, 2}}, etc.
                 _list = _iter.elements[1].elements
             return ({_iter.elements[0].name: item} for item in _list)
-        
+
         def evaluate_current(current: dict) -> BaseElement:
             return dynamic_scoping(expr_to_evaluate.evaluate, current, evaluation)
 
