@@ -87,11 +87,9 @@ def to_std_sparse_array(sparse_array, evaluation: Evaluation):
         ).evaluate(evaluation)
 
 
-def unpack_outer(
-    item, rest_lists, current, level: int, const_etc: tuple
-) -> Union[list, BaseElement]:
+def construct_outer(lists, current, const_etc: tuple) -> Union[list, BaseElement]:
     """
-    Recursively unpacks lists to evaluate outer product.
+    Recursively unpacks lists to construct outer product.
     ------------------------------------
 
     Unlike direct products, outer (tensor) products require traversing the
@@ -100,8 +98,8 @@ def unpack_outer(
 
     Parameters:
 
-    ``item``: the current item to be unpacked (if not at lowest level), or joined
-    to current (if at lowest level)
+    ``item``: the current item to be unpacked (if not at lowest level),
+    or joined to current (if at lowest level)
 
     ``rest_lists``: the rest of lists to be unpacked
 
@@ -126,6 +124,10 @@ def unpack_outer(
         evaluation,  # evaluation: Evaluation
     )
     ```
+
+    For those unfamiliar with ``construct_outer``, ``ConstructOuterTest``
+    in ``test/eval/test_tensors.py`` provides a detailed introduction and
+    several good examples.
     """
     (
         cond_next_list,  # return True when the next list should be unpacked
@@ -137,6 +139,9 @@ def unpack_outer(
         evaluation,  # evaluation: Evaluation
     ) = const_etc
 
+    _apply_f = (lambda current: (apply_f(current),)) if if_flatten else apply_f
+
+    # Recursive step of unpacking
     def _unpack_outer(
         item, rest_lists, current, level: int
     ) -> Union[list, BaseElement]:
@@ -145,9 +150,9 @@ def unpack_outer(
             if rest_lists:
                 return _unpack_outer(
                     rest_lists[0], rest_lists[1:], join_elem(current, item), 1
-                )
+                )  # unpacking of a list always start from level 1
             else:
-                return apply_f(join_elem(current, item))
+                return _apply_f(join_elem(current, item))
         else:  # unpack this list at next level
             elements = []
             action = elements.extend if if_flatten else elements.append
@@ -156,7 +161,7 @@ def unpack_outer(
                 action(_unpack_outer(element, rest_lists, current, level + 1))
             return apply_head(elements)
 
-    return _unpack_outer(item, rest_lists, current, level)
+    return _unpack_outer(lists[0], lists[1:], current, 1)
 
 
 def eval_Inner(f, list1, list2, g, evaluation: Evaluation):
@@ -258,7 +263,7 @@ def eval_Outer(f, lists, evaluation: Evaluation):
             False,  # if_flatten
             evaluation,
         )
-        return unpack_outer(lists[0], lists[1:], (), 1, etc)
+        return construct_outer(lists, (), etc)
 
     # head == SparseArray
     dims = []
@@ -273,7 +278,7 @@ def eval_Outer(f, lists, evaluation: Evaluation):
         return isinstance(item, Atom) or not item.head.sameQ(head)
 
     def sparse_apply_Rule(current) -> tuple:
-        return (Expression(SymbolRule, ListExpression(*current[0]), current[1]),)
+        return Expression(SymbolRule, ListExpression(*current[0]), current[1])
 
     def sparse_join_elem(current, item) -> tuple:
         return (current[0] + item.elements[0].elements, current[1] * item.elements[1])
@@ -292,7 +297,7 @@ def eval_Outer(f, lists, evaluation: Evaluation):
         SymbolAutomatic,
         dims,
         val,
-        ListExpression(*unpack_outer(lists[0], lists[1:], ((), Integer1), 1, etc)),
+        ListExpression(*construct_outer(lists, ((), Integer1), etc)),
     )
 
 
