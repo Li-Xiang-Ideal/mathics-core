@@ -376,7 +376,11 @@ class ConstructOuterTest(unittest.TestCase):
             [(15, 6), (15, 7), (15, 8)],
         ]
 
-        expected_result_3 = [[[[], [], []], [[], [], []]], [[[], [], []], [[], [], []]], [[], [], []]]
+        expected_result_3 = [
+            [[[], [], []], [[], [], []]],
+            [[[], [], []], [[], [], []]],
+            [[], [], []],
+        ]
 
         etc_1 = (
             (lambda item, level: not isinstance(item, list)),
