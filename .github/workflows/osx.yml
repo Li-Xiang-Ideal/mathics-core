@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [macOS]
-        python-version: ['3.9', '3.10']
+        python-version: ['3.11']
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -24,7 +24,17 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install OS dependencies
       run: |
-        brew install llvm@14 tesseract
+        brew install llvm@14
+        brew deps llvm@14
+        brew uninstall llvm@14
+        brew install llvm@15
+        brew deps llvm@15
+        brew uninstall llvm@15
+        brew install llvm@16
+        brew deps llvm@16
+        brew uninstall llvm@16
+        brew install llvm@17 tesseract
+        brew deps llvm@17
         python -m pip install --upgrade pip
     - name: Install Mathics3 with full Python dependencies
       run: |
